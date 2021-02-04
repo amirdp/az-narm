@@ -40,4 +40,29 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'author_id');
+    }
+
+    // user has many comments
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'from_user');
+    }
+
+    public function can_post()
+    {
+        $role = $this->role;
+        if ($role == 'author' || $role == 'admin') {
+            return true;
+        }
+        return false;
+    }
+
+    public function is_admin()
+    {
+        return $this->role == 'admin';
+    }
 }
